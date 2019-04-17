@@ -1,0 +1,52 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.toc {
+	font-family: Arial;
+	margin-bottom: 1.5em;
+	background: #fafafa;
+	padding: 2em 1em;
+}
+
+.toc ol {
+	counter-reset: section;
+	list-style-type: none;
+	margin-bottom: 0;
+	padding-left: 25px;
+}
+
+.toc > ol {
+	padding-left: 0;
+	margin-bottom: -.5em;
+	margin-top: -.5em;
+}
+
+.toc ol li {
+	display: flex;
+	align-items: center;
+}
+
+.toc ol li span {
+	padding-right: .5em;
+}
+
+.toc ol li span:before {
+	counter-increment: section;
+	content: counters(section, ".") " ";
+	opacity: .5;
+}
+
+.toc > ol > li > a {
+	font-weight: bold;
+	margin-bottom: .5em;
+	margin-top: .5em;
+}
+
+.toc ol li a {
+	text-decoration: none;
+	display: inline-block;
+	color: #0074d9;
+	line-height: 1.5;
+}
