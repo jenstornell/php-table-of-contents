@@ -1,28 +1,30 @@
 # PHP Table of Contents
 
-*Version 1.1* - [Changelog](changelog.md)
+*Version 1.2* - [Changelog](changelog.md)
 
 ## In short
 
 - Convert html to a clickable table of contents
 - Convert headings to support ID links
 - Really small file
+- Super simple usage
 
 ## Usage
 
 ```php
-// Create a class instance
-$toc = new JensTornell\Toc();
+$toc = new PHPTableOfContents($html);
 
-// Add IDs to headings to allow anchors
-$html = $toc->headings($html);
-
-// Output a table of content list
-echo $toc->list($html);
+// Output the table of contents
+echo $toc->list();
 
 // Output the content
-echo $html;
+echo $toc->html();
 ```
+
+## Known limitations
+
+- You can't provide an h1 in the `$html`. It will not know what to do with the h1.
+- Don't add an ID tag to your headers because the will collide with IDs from Table of Contents IDs.
 
 ## Donate
 

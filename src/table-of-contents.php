@@ -1,19 +1,22 @@
 <?php
-namespace JensTornell;
-
-class Toc {
+class PHPTableOfContents {
   private $headings;
+  private $html;
 
-  // Set ID to headings. Now the headings will be linkable with anchor hash
-  public function headings($html) {
-    $this->headings = $this->getHeadings($html);
+  public function __construct($html) {
+    $this->html = $html;
+    $this->setHeadings();
+  }
 
-    foreach($this->headings[1] as $item) {
-      if(strpos($item, ' id=') !== false) continue;
+  // Html
+  public function html() {
+    $html = $this->html;
+    $matches = $this->headings;
 
+    foreach($matches[1] as $index => $item) {
       $html = str_replace(
         '>' . $item . '</h',
-        ' id="' . $this->slugify($item) . '">' . $item . '</h',
+        ' id="' . $matches[2][$index] . '">' . $item . '</h',
         $html
       );
     }
@@ -21,16 +24,10 @@ class Toc {
   }
 
   // Generate table of content nested list
-  public function list($html) {
-    $markdown = '';
+  public function list() {
     $out = '';
     $old_depth = 0;
-
-    if(isset($this->headings)) {
-      $matches = $this->headings;
-    } else {
-      $matches = $this->getHeadings($html);
-    }
+    $matches = $this->headings;
 
     foreach($matches[1] as $key => $item) {
       $depth = substr($matches[0][$key], 2, 1) - 2;
@@ -41,17 +38,29 @@ class Toc {
         $out .=  "<li>\n";
         $out .= "<ol>\n";
       }
-      $out .= '<li><span></span><a href="#' . $this->slugify($item) . '">' . $item . '</a></li>' . "\n";
+      $out .= sprintf("
+        <li>
+          <span></span>
+          <a href='#%s'>%s</a>
+        </li>
+      ", $matches[2][$key], $item);
       $old_depth = $depth;
     }
 
-    return "<ol>\n" . $out . "</ol>\n\n";
+    return "<ol>\n" . $out . "\n</ol>\n\n";
   }
 
-  // Get headings from html with regex
-  private function getHeadings($html) {
-    preg_match_all('|<h[^>]+>(.*)</h[^>]+>|iU', $html, $matches);
-    return $matches;
+  // Set headings
+  private function setHeadings() {
+    preg_match_all('|<h[^>]+>(.*)</h[^>]+>|iU', $this->html, $matches);
+
+    $slugs = [];
+    foreach($matches[1] as $item) {
+      $slugs[] = $this->slugify($item);
+    }
+
+    $this->headings = $matches;
+    $this->headings[2] = $slugs;
   }
 
   // https://gist.github.com/james2doyle/9158349
