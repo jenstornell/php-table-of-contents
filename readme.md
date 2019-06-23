@@ -25,7 +25,7 @@ echo $toc->html();
 
 - You can't provide an h1 in the `$html`. It will not know what to do with the h1.
 - Don't add an ID tag to your headers because the will collide with IDs from Table of Contents IDs.
-- Supports characters like åäöûè but not chinese etc.
+- Supports characters like åäöûè for ID generation but not chinese etc.
 
 ## Donate
 
