@@ -21,6 +21,10 @@ echo $toc->list();
 echo $toc->html();
 ```
 
+## Result
+
+![Screenshot](screenshot.png)
+
 ## Known limitations
 
 - You can't provide an h1 in the `$html`. It will not know what to do with the h1.
