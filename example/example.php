@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . '/toc.php';
+include __DIR__ . '/../src/table-of-contents.php';
 
 ?>
 <style>
@@ -20,8 +20,8 @@ $text = '
 <p>Content</p>
 ';
 
-$toc = new TOC();
-$text = $toc->anchorHeadings($text);
+$toc = new JensTornell\Toc();
+$text = $toc->headings($text);
 ?>
 <div class="toc">
   <?= $toc->list($text); ?>

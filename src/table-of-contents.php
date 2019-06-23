@@ -1,10 +1,14 @@
 <?php
-class TOC {
-  // Set ID to headings. Now the headings will be linkable with anchor hash
-  public function anchorHeadings($html) {
-    $matches = $this->getHeadings($html);
+namespace JensTornell;
 
-    foreach($matches[1] as $item) {
+class Toc {
+  private $headings;
+
+  // Set ID to headings. Now the headings will be linkable with anchor hash
+  public function headings($html) {
+    $this->headings = $this->getHeadings($html);
+
+    foreach($this->headings[1] as $item) {
       if(strpos($item, ' id=') !== false) continue;
 
       $html = str_replace(
@@ -16,26 +20,17 @@ class TOC {
     return $html;
   }
 
-  // Slugify
-  function slugify($text) {
-    $text=strip_tags($text);
-    $text = preg_replace('~[^\pL\d]+~u', '-', $text);
-    setlocale(LC_ALL, 'en_US.utf8');
-    $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
-    $text = preg_replace('~[^-\w]+~', '', $text);
-    $text = trim($text, '-');
-    $text = preg_replace('~-+~', '-', $text);
-    $text = strtolower($text);
-    if (empty($text)) { return 'n-a'; }
-    return $text;
-}
-
   // Generate table of content nested list
   public function list($html) {
-    $matches = $this->getHeadings($html);
     $markdown = '';
     $out = '';
     $old_depth = 0;
+
+    if(isset($this->headings)) {
+      $matches = $this->headings;
+    } else {
+      $matches = $this->getHeadings($html);
+    }
 
     foreach($matches[1] as $key => $item) {
       $depth = substr($matches[0][$key], 2, 1) - 2;
@@ -57,5 +52,25 @@ class TOC {
   private function getHeadings($html) {
     preg_match_all('|<h[^>]+>(.*)</h[^>]+>|iU', $html, $matches);
     return $matches;
+  }
+
+  // https://gist.github.com/james2doyle/9158349
+  function slugify($string, $replace = array(), $delimiter = '-') {
+    if (!extension_loaded('iconv')) {
+      throw new Exception('iconv module not loaded');
+    }
+    $oldLocale = setlocale(LC_ALL, '0');
+    setlocale(LC_ALL, 'en_US.UTF-8');
+    $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+    if (!empty($replace)) {
+      $clean = str_replace((array) $replace, ' ', $clean);
+    }
+    $clean = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $clean);
+    $clean = strtolower($clean);
+    $clean = preg_replace("/[\/_|+ -]+/", $delimiter, $clean);
+    $clean = trim($clean, $delimiter);
+    
+    setlocale(LC_ALL, $oldLocale);
+    return $clean;
   }
 }
