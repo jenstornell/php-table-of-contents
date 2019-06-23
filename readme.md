@@ -23,6 +23,8 @@ echo $toc->html();
 
 ## Result
 
+Below is how a styled table of contents list may look like.
+
 ![Screenshot](screenshot.png)
 
 ## Known limitations
