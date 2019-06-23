@@ -17,13 +17,11 @@ $toc = new JensTornell\Toc();
 // Add IDs to headings to allow anchors
 $html = $toc->headings($html);
 
-// Output table of content heading list
-echo '<div class="toc">';
+// Output a table of content list
 echo $toc->list($html);
-echo '</div>';
 
-// Output the rest of the content
-<?= $html; ?>
+// Output the content
+echo $html;
 ```
 
 ## Donate
